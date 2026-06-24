@@ -1,5 +1,13 @@
-import { BrowserWindow, app } from 'electron';
+import { BrowserWindow, app, clipboard, dialog, ipcMain } from 'electron';
 import path from 'node:path';
+import { loadCore } from './core';
+import { registerDatabaseHandlers } from './handlers/db';
+
+registerDatabaseHandlers(ipcMain, {
+  core: loadCore(),
+  dialog,
+  clipboard
+});
 
 async function createWindow() {
   const window = new BrowserWindow({
