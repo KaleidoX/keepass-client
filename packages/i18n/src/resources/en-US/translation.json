@@ -1,0 +1,24 @@
+{
+  "welcome": {
+    "title": "Open a KeePass database",
+    "description": "Choose a local .kdbx file to get started."
+  },
+  "unlock": {
+    "choose_file": "Choose .kdbx file",
+    "no_file_selected": "No file selected",
+    "password_label": "Master password",
+    "submit": "Open database"
+  },
+  "entry": {
+    "list_label": "Entries",
+    "new": "New entry",
+    "delete_selected": "Delete selected entry",
+    "select_empty": "Select an entry to view details.",
+    "copy_password": "Copy password"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading…"
+  }
+}

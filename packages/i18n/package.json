@@ -1,0 +1,9 @@
+{
+  "name": "@keepass/i18n",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./en-US": "./src/resources/en-US/translation.json",
+    "./zh-CN": "./src/resources/zh-CN/translation.json"
+  }
+}

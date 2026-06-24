@@ -1,0 +1,24 @@
+{
+  "welcome": {
+    "title": "打开 KeePass 数据库",
+    "description": "选择一个本地 .kdbx 文件开始使用。"
+  },
+  "unlock": {
+    "choose_file": "选择 .kdbx 文件",
+    "no_file_selected": "未选择文件",
+    "password_label": "主密码",
+    "submit": "打开数据库"
+  },
+  "entry": {
+    "list_label": "条目",
+    "new": "新建条目",
+    "delete_selected": "删除选中条目",
+    "select_empty": "选择一个条目查看详情。",
+    "copy_password": "复制密码"
+  },
+  "common": {
+    "save": "保存",
+    "cancel": "取消",
+    "loading": "加载中…"
+  }
+}
