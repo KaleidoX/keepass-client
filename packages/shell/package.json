@@ -1,0 +1,17 @@
+{
+  "name": "@keepass/shell",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "electron-vite build",
+    "dev": "electron-vite dev"
+  },
+  "dependencies": {
+    "electron": "^42.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "electron-vite": "^5.0.0",
+    "typescript": "^5.8.0"
+  }
+}
