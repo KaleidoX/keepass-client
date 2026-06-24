@@ -16,7 +16,10 @@ pub fn create_fixture_database(password: &str) -> FixtureDatabase {
     let unique = format!(
         "keepass-client-fixture-{}-{}-{}",
         std::process::id(),
-        SystemTime::now().duration_since(UNIX_EPOCH).expect("system time before epoch").as_nanos(),
+        SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("system time before epoch")
+            .as_nanos(),
         COUNTER.fetch_add(1, Ordering::Relaxed)
     );
     let dir = std::env::temp_dir().join(unique);
@@ -35,7 +38,9 @@ pub fn create_fixture_database(password: &str) -> FixtureDatabase {
     entry.set_protected(fields::PASSWORD, "ghp_secret");
 
     let mut bytes = Vec::new();
-    database.save(&mut bytes, DatabaseKey::new().with_password(password)).expect("save fixture database");
+    database
+        .save(&mut bytes, DatabaseKey::new().with_password(password))
+        .expect("save fixture database");
     fs::write(&path, bytes).expect("write fixture database");
 
     FixtureDatabase { path }

@@ -18,7 +18,10 @@ fn create_fixture_bytes(password: &str) -> Result<Vec<u8>, Box<dyn std::error::E
     Ok(bytes)
 }
 
-fn list_titles_from_bytes(bytes: &[u8], password: &str) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+fn list_titles_from_bytes(
+    bytes: &[u8],
+    password: &str,
+) -> Result<Vec<String>, Box<dyn std::error::Error>> {
     let mut source = bytes;
     let database = Database::open(&mut source, DatabaseKey::new().with_password(password))?;
     Ok(database
