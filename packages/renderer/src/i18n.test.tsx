@@ -1,14 +1,19 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { App } from './App';
-import { I18nProvider, createRendererI18n } from './lib/i18n';
+import { I18nProvider, createRendererI18n, useT } from './lib/i18n';
 
-describe('App', () => {
-  it('renders the app shell', () => {
+function TranslatedTitle() {
+  const { t } = useT();
+
+  return <h1>{t('welcome.title')}</h1>;
+}
+
+describe('renderer i18n', () => {
+  it('renders welcome.title in English', () => {
     render(
       <I18nProvider i18n={createRendererI18n('en-US')}>
-        <App />
+        <TranslatedTitle />
       </I18nProvider>
     );
 

@@ -1,10 +1,13 @@
 import { WelcomePanel } from '@keepass/ui';
+import { useT } from './lib/i18n';
 
 export function App() {
+  const { t } = useT();
+
   return (
     <WelcomePanel
-      title="Open a KeePass database"
-      description="Choose a local .kdbx file to get started."
+      title={t('welcome.title')}
+      description={t('welcome.description')}
     />
   );
 }

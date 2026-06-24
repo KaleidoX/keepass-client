@@ -8,9 +8,12 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@keepass/i18n": "workspace:*",
     "@keepass/ui": "workspace:*",
+    "i18next": "^26.3.2",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "react-i18next": "^17.0.8"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.1",
