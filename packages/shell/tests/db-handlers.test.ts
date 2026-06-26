@@ -78,7 +78,8 @@ describe('database IPC handlers', () => {
       }),
       deleteEntry: async () => {},
       saveDatabase: async () => {},
-      getEntryPassword: async () => 'super-secret'
+      getEntryPassword: async () => 'super-secret',
+      closeDatabase: async () => {}
     };
 
     const handlers = createDatabaseHandlers({
@@ -96,7 +97,8 @@ describe('database IPC handlers', () => {
       'keepass:createEntry',
       'keepass:deleteEntry',
       'keepass:saveDatabase',
-      'keepass:copyPassword'
+      'keepass:copyPassword',
+      'keepass:closeDatabase'
     ]);
 
     await expect(handlers['keepass:getCoreVersion']()).resolves.toBe('2.0.0-test');
@@ -117,6 +119,7 @@ describe('database IPC handlers', () => {
     await expect(handlers['keepass:deleteEntry']({}, 'db-1', 'entry-1')).resolves.toBeUndefined();
     await expect(handlers['keepass:saveDatabase']({}, 'db-1')).resolves.toBeUndefined();
     await expect(handlers['keepass:copyPassword']({}, 'db-1', 'entry-1')).resolves.toBeUndefined();
+    await expect(handlers['keepass:closeDatabase']({}, 'db-1')).resolves.toBeUndefined();
 
     expect(showOpenDialog).toHaveBeenCalledWith({
       properties: ['openFile'],
@@ -162,7 +165,8 @@ describe('database IPC handlers', () => {
         }),
         deleteEntry: async () => {},
         saveDatabase: async () => {},
-        getEntryPassword: async () => 'password'
+        getEntryPassword: async () => 'password',
+        closeDatabase: async () => {}
       },
       dialog: {
         showOpenDialog: vi.fn()
@@ -172,7 +176,7 @@ describe('database IPC handlers', () => {
       }
     });
 
-    expect(handle).toHaveBeenCalledTimes(9);
+    expect(handle).toHaveBeenCalledTimes(10);
     expect(handle.mock.calls.map(([channel]) => channel)).toEqual([
       'keepass:getCoreVersion',
       'keepass:chooseDatabaseFile',
@@ -182,7 +186,8 @@ describe('database IPC handlers', () => {
       'keepass:createEntry',
       'keepass:deleteEntry',
       'keepass:saveDatabase',
-      'keepass:copyPassword'
+      'keepass:copyPassword',
+      'keepass:closeDatabase'
     ]);
   });
 });

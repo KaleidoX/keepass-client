@@ -13,6 +13,8 @@ export interface NativeCore {
   deleteEntry?(databaseId: string, entryId: string): void | Promise<void>;
   saveDatabase?(databaseId: string): void | Promise<void>;
   getEntryPassword?(databaseId: string, entryId: string): string | Promise<string>;
+  closeDatabase?(databaseId: string): void | Promise<void>;
+  closeAllDatabases?(): number;
 }
 
 export function loadCore(): NativeCore {

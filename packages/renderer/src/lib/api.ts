@@ -38,6 +38,7 @@ export type KeePassAPI = {
   deleteEntry(databaseId: string, entryId: string): Promise<void>;
   saveDatabase(databaseId: string): Promise<void>;
   copyPassword(databaseId: string, entryId: string): Promise<void>;
+  closeDatabase(databaseId: string): Promise<void>;
 };
 
 export function getKeePassAPI(): KeePassAPI {

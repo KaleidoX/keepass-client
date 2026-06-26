@@ -12,7 +12,8 @@ export function createKeePassAPI(): KeePassAPI {
     createEntry: (databaseId: string, patch: EntryPatch) => ipcRenderer.invoke('keepass:createEntry', databaseId, patch),
     deleteEntry: (databaseId: string, entryId: string) => ipcRenderer.invoke('keepass:deleteEntry', databaseId, entryId),
     saveDatabase: (databaseId: string) => ipcRenderer.invoke('keepass:saveDatabase', databaseId),
-    copyPassword: (databaseId: string, entryId: string) => ipcRenderer.invoke('keepass:copyPassword', databaseId, entryId)
+    copyPassword: (databaseId: string, entryId: string) => ipcRenderer.invoke('keepass:copyPassword', databaseId, entryId),
+    closeDatabase: (databaseId: string) => ipcRenderer.invoke('keepass:closeDatabase', databaseId)
   };
 }
 

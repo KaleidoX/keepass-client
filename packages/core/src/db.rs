@@ -77,6 +77,21 @@ pub fn open_database(path: PathBuf, password: String) -> Result<OpenedDatabase> 
     })
 }
 
+pub fn close_database(database_id: Uuid) -> Result<()> {
+    let mut sessions = SESSIONS.lock().map_err(|_| Error::SessionStorePoisoned)?;
+    sessions
+        .remove(&database_id)
+        .ok_or(Error::SessionNotFound(database_id))?;
+    Ok(())
+}
+
+pub fn close_all_databases() -> Result<usize> {
+    let mut sessions = SESSIONS.lock().map_err(|_| Error::SessionStorePoisoned)?;
+    let closed_count = sessions.len();
+    sessions.clear();
+    Ok(closed_count)
+}
+
 pub fn list_entries(database_id: Uuid) -> Result<Vec<EntrySummary>> {
     let sessions = SESSIONS.lock().map_err(|_| Error::SessionStorePoisoned)?;
     let session = sessions

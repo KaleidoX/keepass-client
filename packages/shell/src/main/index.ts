@@ -2,12 +2,16 @@ import { BrowserWindow, app, clipboard, dialog, ipcMain } from 'electron';
 import path from 'node:path';
 import { loadCore } from './core';
 import { registerDatabaseHandlers } from './handlers/db';
+import { registerAppLifecycleHandlers } from './lifecycle';
+
+const core = loadCore();
 
 registerDatabaseHandlers(ipcMain, {
-  core: loadCore(),
+  core,
   dialog,
   clipboard
 });
+registerAppLifecycleHandlers(app, core);
 
 async function createWindow() {
   const window = new BrowserWindow({

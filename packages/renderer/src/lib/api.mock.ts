@@ -52,6 +52,8 @@ export function createKeePassAPIMock(overrides: Partial<KeePassAPI> = {}): KeePa
 
   const copyPassword = async () => {};
 
+  const closeDatabase = async () => {};
+
   return {
     getCoreVersion,
     chooseDatabaseFile,
@@ -62,6 +64,7 @@ export function createKeePassAPIMock(overrides: Partial<KeePassAPI> = {}): KeePa
     deleteEntry,
     saveDatabase,
     copyPassword,
+    closeDatabase,
     ...overrides
   };
 }

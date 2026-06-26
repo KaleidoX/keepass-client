@@ -15,5 +15,6 @@ describe('KeePassAPI contract', () => {
     expect(api.deleteEntry).toBeTypeOf('function');
     expect(api.saveDatabase).toBeTypeOf('function');
     expect(api.copyPassword).toBeTypeOf('function');
+    expect(api.closeDatabase).toBeTypeOf('function');
   });
 });

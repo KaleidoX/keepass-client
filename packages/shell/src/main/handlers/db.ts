@@ -38,6 +38,7 @@ type DatabaseHandlers = {
   'keepass:deleteEntry': (_event: IpcMainInvokeEvent, databaseId: string, entryId: string) => Promise<void>;
   'keepass:saveDatabase': (_event: IpcMainInvokeEvent, databaseId: string) => Promise<void>;
   'keepass:copyPassword': (_event: IpcMainInvokeEvent, databaseId: string, entryId: string) => Promise<void>;
+  'keepass:closeDatabase': (_event: IpcMainInvokeEvent, databaseId: string) => Promise<void>;
 };
 
 function requireCoreOperation<OperationName extends keyof NativeCore>(
@@ -99,6 +100,10 @@ export function createDatabaseHandlers({ core, dialog, clipboard }: DatabaseHand
       const getEntryPassword = requireCoreOperation(core, 'getEntryPassword');
       const password = await getEntryPassword.call(core, databaseId, entryId);
       clipboard.writeText(password);
+    },
+    'keepass:closeDatabase': async (_event, databaseId) => {
+      const closeDatabase = requireCoreOperation(core, 'closeDatabase');
+      await closeDatabase.call(core, databaseId);
     }
   };
 }

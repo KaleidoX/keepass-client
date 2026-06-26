@@ -19,6 +19,7 @@
   "common": {
     "save": "Save",
     "cancel": "Cancel",
-    "loading": "Loading…"
+    "loading": "Loading…",
+    "close_database": "Close database"
   }
 }

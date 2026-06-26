@@ -8,6 +8,7 @@ export type DatabaseStoreState = {
   error: string | null;
   openDatabase: (databasePath: string, password: string) => Promise<void>;
   chooseAndOpenDatabase: () => Promise<void>;
+  closeDatabase: () => Promise<void>;
   setError: (error: string | null) => void;
 };
 
@@ -42,6 +43,21 @@ export const useDatabaseStore = createStore<DatabaseStoreState>((set, get) => ({
     }
 
     await get().openDatabase(databasePath, '');
+  },
+  closeDatabase: async () => {
+    const { databaseId } = get();
+    if (!databaseId) {
+      return;
+    }
+
+    try {
+      await getKeePassAPI().closeDatabase(databaseId);
+      set({ databaseId: null, entries: [], error: null });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      set({ error: message });
+      throw error;
+    }
   },
   setError: (error: string | null) => {
     set({ error });

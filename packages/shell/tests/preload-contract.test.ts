@@ -26,7 +26,8 @@ describe('KeePassAPI contract', () => {
       'createEntry',
       'deleteEntry',
       'saveDatabase',
-      'copyPassword'
+      'copyPassword',
+      'closeDatabase'
     ] as const satisfies readonly (keyof KeePassAPI)[];
 
     const api = createKeePassAPI();
@@ -72,6 +73,7 @@ describe('KeePassAPI contract', () => {
         case 'keepass:deleteEntry':
         case 'keepass:saveDatabase':
         case 'keepass:copyPassword':
+        case 'keepass:closeDatabase':
           return Promise.resolve();
         default:
           throw new Error(`Unexpected channel: ${channel}`);
@@ -94,6 +96,7 @@ describe('KeePassAPI contract', () => {
     await expect(api.deleteEntry('db-1', 'entry-1')).resolves.toBeUndefined();
     await expect(api.saveDatabase('db-1')).resolves.toBeUndefined();
     await expect(api.copyPassword('db-1', 'entry-1')).resolves.toBeUndefined();
+    await expect(api.closeDatabase('db-1')).resolves.toBeUndefined();
 
     expect(invoke.mock.calls).toEqual([
       ['keepass:getCoreVersion'],
@@ -104,7 +107,8 @@ describe('KeePassAPI contract', () => {
       ['keepass:createEntry', 'db-1', { title: 'New entry', username: 'user' }],
       ['keepass:deleteEntry', 'db-1', 'entry-1'],
       ['keepass:saveDatabase', 'db-1'],
-      ['keepass:copyPassword', 'db-1', 'entry-1']
+      ['keepass:copyPassword', 'db-1', 'entry-1'],
+      ['keepass:closeDatabase', 'db-1']
     ]);
   });
 });
