@@ -8,12 +8,12 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "electron": "^42.0.0"
+    "electron": "catalog:"
   },
   "devDependencies": {
-    "@types/node": "^22.13.0",
-    "electron-vite": "^5.0.0",
-    "vitest": "^4.1.6",
-    "typescript": "^5.8.0"
+    "@types/node": "catalog:",
+    "electron-vite": "catalog:",
+    "vitest": "catalog:",
+    "typescript": "catalog:"
   }
 }
