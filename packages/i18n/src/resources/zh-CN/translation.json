@@ -4,22 +4,39 @@
     "description": "选择一个本地 .kdbx 文件开始使用。"
   },
   "unlock": {
-    "choose_file": "选择 .kdbx 文件",
-    "no_file_selected": "未选择文件",
+    "title": "解锁数据库",
+    "database_path": "数据库文件",
+    "choose_file": "选择文件",
+    "no_file_selected": "请先选择数据库文件",
     "password_label": "主密码",
-    "submit": "打开数据库"
+    "submit": "解锁",
+    "loading": "解锁中…"
   },
   "entry": {
     "list_label": "条目",
+    "search_label": "搜索条目",
+    "detail_label": "条目详情",
+    "empty": "没有条目",
     "new": "新建条目",
     "delete_selected": "删除选中条目",
-    "select_empty": "选择一个条目查看详情。",
-    "copy_password": "复制密码"
+    "select_empty": "选择一个条目查看详情",
+    "copy_password": "复制密码",
+    "title": "标题",
+    "username": "用户名",
+    "password": "密码",
+    "url": "URL",
+    "notes": "备注",
+    "loading": "正在加载条目详情…",
+    "edit": "编辑",
+    "show_password": "显示密码",
+    "hide_password": "隐藏密码",
+    "delete": "删除"
   },
   "common": {
     "save": "保存",
+    "save_database": "保存数据库",
     "cancel": "取消",
     "loading": "加载中…",
-    "close_database": "关闭数据库"
+    "close_database": "锁定数据库"
   }
 }

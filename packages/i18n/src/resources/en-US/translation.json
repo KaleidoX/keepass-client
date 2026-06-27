@@ -4,22 +4,39 @@
     "description": "Choose a local .kdbx file to get started."
   },
   "unlock": {
-    "choose_file": "Choose .kdbx file",
-    "no_file_selected": "No file selected",
+    "title": "Unlock database",
+    "database_path": "Database file",
+    "choose_file": "Choose file",
+    "no_file_selected": "Choose a database file first",
     "password_label": "Master password",
-    "submit": "Open database"
+    "submit": "Unlock",
+    "loading": "Unlocking…"
   },
   "entry": {
     "list_label": "Entries",
+    "search_label": "Search entries",
+    "detail_label": "Entry details",
+    "empty": "No entries",
     "new": "New entry",
     "delete_selected": "Delete selected entry",
-    "select_empty": "Select an entry to view details.",
-    "copy_password": "Copy password"
+    "select_empty": "Select an entry to view details",
+    "copy_password": "Copy password",
+    "title": "Title",
+    "username": "Username",
+    "password": "Password",
+    "url": "URL",
+    "notes": "Notes",
+    "loading": "Loading details…",
+    "edit": "Edit",
+    "show_password": "Show password",
+    "hide_password": "Hide password",
+    "delete": "Delete"
   },
   "common": {
     "save": "Save",
+    "save_database": "Save database",
     "cancel": "Cancel",
     "loading": "Loading…",
-    "close_database": "Close database"
+    "close_database": "Lock database"
   }
 }

@@ -9,3 +9,5 @@ target/
 .DS_Store
 Thumbs.db
 !docs/superpowers
+.superpowers/
+.slim/deepwork/
