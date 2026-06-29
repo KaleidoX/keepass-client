@@ -6,3 +6,5 @@ export { EntryList } from './components/EntryList';
 export type { EntryListItem, EntryListLabels, EntryListProps } from './components/EntryList';
 export { EntryDetail } from './components/EntryDetail';
 export type { EntryDetailData, EntryDetailLabels, EntryDetailProps, EntryPatch } from './components/EntryDetail';
+export { Alert, AlertDescription } from './components/ui/alert';
+export { Button } from './components/ui/button';

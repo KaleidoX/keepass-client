@@ -16,6 +16,7 @@
     "list_label": "条目",
     "search_label": "搜索条目",
     "detail_label": "条目详情",
+    "back_to_entries": "返回条目列表",
     "empty": "没有条目",
     "new": "新建条目",
     "delete_selected": "删除选中条目",
@@ -30,7 +31,8 @@
     "edit": "编辑",
     "show_password": "显示密码",
     "hide_password": "隐藏密码",
-    "delete": "删除"
+    "delete": "删除",
+    "delete_confirmation_description": "这将永久删除“{{title}}”。此操作无法撤销。"
   },
   "common": {
     "save": "保存",

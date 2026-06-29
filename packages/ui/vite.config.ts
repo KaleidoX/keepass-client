@@ -1,6 +1,12 @@
+import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url))
+    }
+  },
   esbuild: {
     jsx: 'automatic',
     jsxImportSource: 'react'
@@ -13,7 +19,14 @@ export default defineConfig({
       fileName: 'index'
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'clsx', 'tailwind-merge']
+      external: [
+        'react',
+        'react-dom',
+        'clsx',
+        'tailwind-merge',
+        'class-variance-authority',
+        'radix-ui'
+      ]
     }
   }
 });

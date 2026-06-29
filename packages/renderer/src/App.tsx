@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { EntryDetail, EntryList, UnlockForm } from '@keepass/ui';
+import { useEffect, useState } from 'react';
+import { Alert, AlertDescription, Button, EntryDetail, EntryList, UnlockForm } from '@keepass/ui';
 import { getKeePassAPI } from './lib/api';
 import { useT } from './lib/i18n';
+import { useMediaQuery } from './lib/useMediaQuery';
 import { useDatabaseStore } from './stores/databaseStore';
 
 export function App() {
@@ -23,6 +24,14 @@ export function App() {
   const saveDatabase = useDatabaseStore((state) => state.saveDatabase);
   const setError = useDatabaseStore((state) => state.setError);
   const [selectedPath, setSelectedPath] = useState<string | null>(null);
+  const [activeMobilePane, setActiveMobilePane] = useState<'list' | 'detail'>('list');
+  const isNarrowViewport = useMediaQuery('(max-width: 767px)');
+
+  useEffect(() => {
+    if (databaseId) {
+      setActiveMobilePane('list');
+    }
+  }, [databaseId]);
 
   const unlockLabels = {
     title: t('unlock.title'),
@@ -48,105 +57,144 @@ export function App() {
     showPassword: t('entry.show_password'),
     hidePassword: t('entry.hide_password'),
     delete: t('entry.delete'),
+    deleteConfirmationDescription: (entryTitle: string) =>
+      t('entry.delete_confirmation_description', { title: entryTitle }),
     create: t('entry.new')
   };
 
-  const headerButtonClass =
-    'rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2';
+  const showEntryList = !isNarrowViewport || activeMobilePane === 'list';
+  const showEntryDetail = !isNarrowViewport || activeMobilePane === 'detail';
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-950">
+    <main className="min-h-dvh bg-slate-100 text-slate-950">
       <h1 className="sr-only">{t('welcome.title')}</h1>
-      {error ? (
-        <p className="mx-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
-          {error}
-        </p>
-      ) : null}
+
       {databaseId ? (
-        <div className="flex h-screen flex-col">
-          <header className="flex items-center justify-end gap-2 border-b border-slate-200 bg-white p-4">
-            <button
-              type="button"
-              className={headerButtonClass}
-              onClick={() => {
-                void saveDatabase().catch(() => undefined);
-              }}
-            >
-              {t('common.save_database')}
-            </button>
-            <button
-              type="button"
-              className={headerButtonClass}
-              onClick={() => {
-                void closeDatabase().catch(() => undefined);
-              }}
-            >
-              {t('common.close_database')}
-            </button>
+        <div className="flex h-dvh min-h-0 flex-col bg-[radial-gradient(circle_at_top_left,rgba(148,163,184,0.26),transparent_34rem)]">
+          <header className="shrink-0 border-b border-slate-200 bg-white/90 px-3 py-3 shadow-sm backdrop-blur sm:px-4">
+            <div className="flex flex-wrap items-center justify-end gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                className="h-11"
+                onClick={() => {
+                  void saveDatabase().catch(() => undefined);
+                }}
+              >
+                {t('common.save_database')}
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                className="h-11"
+                onClick={() => {
+                  void closeDatabase().catch(() => undefined);
+                }}
+              >
+                {t('common.close_database')}
+              </Button>
+            </div>
           </header>
 
-          <div className="grid min-h-0 flex-1 grid-cols-[minmax(240px,360px)_1fr]">
-            <section aria-label={t('entry.list_label')} className="min-h-0 border-r border-slate-200 bg-slate-100 p-4">
-              <EntryList
-                labels={{ search: t('entry.search_label'), empty: t('entry.empty') }}
-                entries={entries}
-                selectedEntryId={selectedEntryId}
-                onSelectEntry={(entryId) => {
-                  void selectEntry(entryId).catch(() => undefined);
-                }}
-              />
-            </section>
-            <section aria-label={t('entry.detail_label')} className="min-h-0 bg-white">
-              <EntryDetail
-                labels={detailLabels}
-                entry={selectedEntry}
-                isLoading={isDetailLoading}
-                onCopyPassword={(entryId) => {
-                  void copyPassword(entryId).catch(() => undefined);
-                }}
-                onUpdateEntry={(entryId, patch) => {
-                  void updateEntry(entryId, patch).catch(() => undefined);
-                }}
-                onDeleteEntry={(entryId) => {
-                  void deleteEntry(entryId).catch(() => undefined);
-                }}
-                onCreateEntry={(patch) => {
-                  void createEntry(patch).catch(() => undefined);
-                }}
-              />
-            </section>
+          {error ? (
+            <div className="shrink-0 px-3 pt-3 sm:px-4">
+              <Alert variant="destructive" className="border-red-200 bg-red-50 text-red-800">
+                <AlertDescription className="text-red-800">{error}</AlertDescription>
+              </Alert>
+            </div>
+          ) : null}
+
+          <div className="grid min-h-0 flex-1 grid-cols-1 gap-0 p-2 sm:p-3 md:grid-cols-[minmax(280px,34vw)_minmax(0,1fr)] md:gap-3 lg:grid-cols-[360px_minmax(0,1fr)] lg:p-4">
+            {showEntryList ? (
+              <section
+                aria-label={t('entry.list_label')}
+                className="min-h-0 overflow-hidden rounded-2xl border border-slate-200 bg-slate-50/90 p-3 shadow-sm"
+              >
+                <EntryList
+                  labels={{ search: t('entry.search_label'), empty: t('entry.empty') }}
+                  entries={entries}
+                  selectedEntryId={selectedEntryId}
+                  onSelectEntry={(entryId) => {
+                    void selectEntry(entryId).catch(() => undefined);
+                    if (isNarrowViewport) {
+                      setActiveMobilePane('detail');
+                    }
+                  }}
+                />
+              </section>
+            ) : null}
+            {showEntryDetail ? (
+              <section
+                aria-label={t('entry.detail_label')}
+                className="flex min-h-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white/75 shadow-sm"
+              >
+                {isNarrowViewport ? (
+                  <div className="border-b border-slate-200 bg-white/95 p-3">
+                    <Button type="button" variant="outline" className="h-11" onClick={() => setActiveMobilePane('list')}>
+                      {t('entry.back_to_entries')}
+                    </Button>
+                  </div>
+                ) : null}
+                <div className="min-h-0 flex-1">
+                  <EntryDetail
+                    labels={detailLabels}
+                    entry={selectedEntry}
+                    isLoading={isDetailLoading}
+                    onCopyPassword={(entryId) => {
+                      void copyPassword(entryId).catch(() => undefined);
+                    }}
+                    onUpdateEntry={(entryId, patch) => {
+                      void updateEntry(entryId, patch).catch(() => undefined);
+                    }}
+                    onDeleteEntry={(entryId) => {
+                      void deleteEntry(entryId).catch(() => undefined);
+                    }}
+                    onCreateEntry={(patch) => {
+                      void createEntry(patch).catch(() => undefined);
+                    }}
+                  />
+                </div>
+              </section>
+            ) : null}
           </div>
         </div>
       ) : (
-        <div className="flex min-h-screen items-center justify-center p-6">
-          <UnlockForm
-            labels={unlockLabels}
-            selectedPath={selectedPath}
-            isLoading={isLoading}
-            error={null}
-            onChooseFile={() => {
-              void getKeePassAPI()
-                .chooseDatabaseFile()
-                .then((path) => {
-                  if (path) {
-                    setError(null);
-                    setSelectedPath(path);
-                  }
-                })
-                .catch((chooseError) => {
-                  setError(chooseError instanceof Error ? chooseError.message : 'Unknown error');
-                });
-            }}
-            onSubmit={(password) => {
-              if (!selectedPath) {
-                setError(t('unlock.no_file_selected'));
-                return;
-              }
+        <div className="flex min-h-dvh items-center justify-center bg-[radial-gradient(circle_at_top,rgba(148,163,184,0.28),transparent_34rem)] p-4 sm:p-6">
+          <div className="w-full">
+            {error ? (
+              <Alert variant="destructive" className="mx-auto mb-4 max-w-[28rem] border-red-200 bg-red-50 text-red-800">
+                <AlertDescription className="text-red-800">{error}</AlertDescription>
+              </Alert>
+            ) : null}
+            <UnlockForm
+              labels={unlockLabels}
+              selectedPath={selectedPath}
+              isLoading={isLoading}
+              error={null}
+              onChooseFile={() => {
+                void getKeePassAPI()
+                  .chooseDatabaseFile()
+                  .then((path) => {
+                    if (path) {
+                      setError(null);
+                      setSelectedPath(path);
+                    }
+                  })
+                  .catch((chooseError) => {
+                    setError(chooseError instanceof Error ? chooseError.message : 'Unknown error');
+                  });
+              }}
+              onSubmit={(password) => {
+                if (!selectedPath) {
+                  setError(t('unlock.no_file_selected'));
+                  return;
+                }
 
-              setError(null);
-              void openDatabase(selectedPath, password).catch(() => undefined);
-            }}
-          />
+                setError(null);
+                void openDatabase(selectedPath, password).catch(() => undefined);
+              }}
+            />
+          </div>
         </div>
       )}
     </main>

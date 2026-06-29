@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/vitest';
 
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { ComponentType } from 'react';
 import { describe, expect, it, vi } from 'vitest';
@@ -70,6 +70,7 @@ type EntryDetailProps = {
     cancel: string;
     copyPassword: string;
     delete: string;
+    deleteConfirmationDescription?: (entryTitle: string) => string;
     create: string;
     loading: string;
     showPassword: string;
@@ -295,9 +296,120 @@ describe('EntryDetail contract', () => {
     await user.type(screen.getByLabelText('Title'), 'Personal email');
     await user.click(screen.getByRole('button', { name: 'Save' }));
     await user.click(screen.getByRole('button', { name: 'Delete' }));
+    const confirmation = await screen.findByRole('alertdialog', { name: /Delete/ });
+    await user.click(within(confirmation).getByRole('button', { name: 'Delete' }));
 
     expect(onCopyPassword).toHaveBeenCalledWith('entry-1');
     expect(onUpdateEntry).toHaveBeenCalledWith('entry-1', expect.objectContaining({ title: 'Personal email' }));
+    expect(onDeleteEntry).toHaveBeenCalledWith('entry-1');
+  });
+
+  it('asks for confirmation before deleting an entry', async () => {
+    const user = userEvent.setup();
+    const onDeleteEntry = vi.fn();
+
+    render(
+      <EntryDetail
+        labels={detailLabels}
+        entry={entry}
+        onCopyPassword={vi.fn()}
+        onUpdateEntry={vi.fn()}
+        onDeleteEntry={onDeleteEntry}
+        onCreateEntry={vi.fn()}
+      />
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Delete' }));
+
+    expect(await screen.findByRole('alertdialog', { name: /Delete/ })).toBeInTheDocument();
+    expect(onDeleteEntry).not.toHaveBeenCalled();
+  });
+
+  it('describes which entry will be deleted in the confirmation dialog', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <EntryDetail
+        labels={detailLabels}
+        entry={entry}
+        onCopyPassword={vi.fn()}
+        onUpdateEntry={vi.fn()}
+        onDeleteEntry={vi.fn()}
+        onCreateEntry={vi.fn()}
+      />
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Delete' }));
+    const confirmation = await screen.findByRole('alertdialog', { name: /Delete/ });
+
+    expect(within(confirmation).getByText(/Email/)).toBeInTheDocument();
+    expect(within(confirmation).getByText(/cannot be undone/)).toBeInTheDocument();
+  });
+
+  it('uses an optional label for the delete confirmation description', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <EntryDetail
+        labels={{
+          ...detailLabels,
+          deleteConfirmationDescription: (entryTitle) => `Remove ${entryTitle} from this vault permanently.`
+        }}
+        entry={entry}
+        onCopyPassword={vi.fn()}
+        onUpdateEntry={vi.fn()}
+        onDeleteEntry={vi.fn()}
+        onCreateEntry={vi.fn()}
+      />
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Delete' }));
+    const confirmation = await screen.findByRole('alertdialog', { name: /Delete/ });
+
+    expect(within(confirmation).getByText('Remove Email from this vault permanently.')).toBeInTheDocument();
+  });
+
+  it('does not delete when the confirmation is cancelled', async () => {
+    const user = userEvent.setup();
+    const onDeleteEntry = vi.fn();
+
+    render(
+      <EntryDetail
+        labels={detailLabels}
+        entry={entry}
+        onCopyPassword={vi.fn()}
+        onUpdateEntry={vi.fn()}
+        onDeleteEntry={onDeleteEntry}
+        onCreateEntry={vi.fn()}
+      />
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Delete' }));
+    const confirmation = await screen.findByRole('alertdialog', { name: /Delete/ });
+    await user.click(within(confirmation).getByRole('button', { name: 'Cancel' }));
+
+    expect(onDeleteEntry).not.toHaveBeenCalled();
+  });
+
+  it('deletes when the confirmation is confirmed', async () => {
+    const user = userEvent.setup();
+    const onDeleteEntry = vi.fn();
+
+    render(
+      <EntryDetail
+        labels={detailLabels}
+        entry={entry}
+        onCopyPassword={vi.fn()}
+        onUpdateEntry={vi.fn()}
+        onDeleteEntry={onDeleteEntry}
+        onCreateEntry={vi.fn()}
+      />
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Delete' }));
+    const confirmation = await screen.findByRole('alertdialog', { name: /Delete/ });
+    await user.click(within(confirmation).getByRole('button', { name: 'Delete' }));
+
     expect(onDeleteEntry).toHaveBeenCalledWith('entry-1');
   });
 

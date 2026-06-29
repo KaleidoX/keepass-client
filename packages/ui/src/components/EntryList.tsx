@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react';
 import { cn } from '../lib/utils';
+import { Card } from './ui/card';
+import { Input } from './ui/input';
 
 export type EntryListItem = {
   id: string;
@@ -57,20 +59,22 @@ export function EntryList({ labels, entries, selectedEntryId, onSelectEntry }: E
 
   return (
     <div className="flex h-full min-h-0 flex-col gap-3">
-      <input
-        aria-label={`${labels.search} input`}
-        className="rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-        placeholder={labels.search}
-        type="search"
-        value={query}
-        onChange={(event) => setQuery(event.currentTarget.value)}
-      />
+      <div className="rounded-xl border border-slate-200 bg-white/80 p-2 shadow-sm">
+        <Input
+          aria-label={`${labels.search} input`}
+          className="h-11 border-slate-200 bg-slate-50/80 text-base shadow-none placeholder:text-slate-500 md:text-sm"
+          placeholder={labels.search}
+          type="search"
+          value={query}
+          onChange={(event) => setQuery(event.currentTarget.value)}
+        />
+      </div>
 
-      <div
+      <Card
         role="listbox"
         aria-label={labels.search}
         aria-activedescendant={selectedOptionId}
-        className="min-h-0 flex-1 overflow-auto rounded-lg border border-slate-200 bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+        className="min-h-0 flex-1 gap-1 overflow-auto border-slate-200 bg-white/90 p-1 shadow-sm focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
         tabIndex={0}
         onKeyDown={(event) => {
           if (event.key === 'ArrowDown') {
@@ -94,28 +98,40 @@ export function EntryList({ labels, entries, selectedEntryId, onSelectEntry }: E
         }}
       >
         {filteredEntries.length === 0 ? (
-          <p className="px-3 py-4 text-sm text-slate-500">{labels.empty}</p>
+          <p className="rounded-lg px-3 py-6 text-sm leading-6 text-slate-500">{labels.empty}</p>
         ) : (
-          filteredEntries.map((entry) => (
-            <button
-              key={entry.id}
-              id={`entry-option-${entry.id}`}
-              type="button"
-              role="option"
-              aria-selected={entry.id === selectedEntryId}
-              tabIndex={-1}
-              className={cn(
-                'flex w-full flex-col items-start gap-0.5 border-b border-slate-100 px-3 py-2 text-left text-sm last:border-b-0 hover:bg-slate-50',
-                entry.id === selectedEntryId && 'bg-blue-50 text-blue-950'
-              )}
-              onClick={() => onSelectEntry(entry.id)}
-            >
-              <span className="font-medium">{entry.title}</span>
-              <span className="text-xs text-slate-500">{entry.username}</span>
-            </button>
-          ))
+          filteredEntries.map((entry) => {
+            const isSelected = entry.id === selectedEntryId;
+
+            return (
+              <button
+                key={entry.id}
+                id={`entry-option-${entry.id}`}
+                type="button"
+                role="option"
+                aria-selected={isSelected}
+                tabIndex={-1}
+                className={cn(
+                  'group relative flex min-h-14 w-full min-w-0 flex-col items-start gap-1 rounded-lg border border-transparent px-3 py-2.5 text-left text-sm transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50',
+                  isSelected && 'border-slate-300 bg-slate-100 text-slate-950 shadow-xs'
+                )}
+                onClick={() => onSelectEntry(entry.id)}
+              >
+                <span
+                  className={cn(
+                    'absolute inset-y-2 left-1 w-1 rounded-full bg-transparent',
+                    isSelected && 'bg-slate-900'
+                  )}
+                  aria-hidden="true"
+                />
+                <span className="w-full min-w-0 truncate pl-2 font-medium leading-5 text-slate-950">{entry.title}</span>
+                <span className="w-full min-w-0 truncate pl-2 text-xs leading-4 text-slate-500">{entry.username}</span>
+                {entry.url ? <span className="w-full min-w-0 truncate pl-2 text-xs leading-4 text-slate-400">{entry.url}</span> : null}
+              </button>
+            );
+          })
         )}
-      </div>
+      </Card>
     </div>
   );
 }
